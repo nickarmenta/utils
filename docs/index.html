@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Report Parser - Documentation</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+            }
+
+            header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 60px 40px;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 3em;
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+
+            header p {
+                font-size: 1.3em;
+                opacity: 0.95;
+            }
+
+            .content {
+                padding: 40px;
+            }
+
+            .section {
+                margin-bottom: 50px;
+            }
+
+            h2 {
+                color: #667eea;
+                font-size: 2em;
+                margin-bottom: 20px;
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 10px;
+            }
+
+            h3 {
+                color: #764ba2;
+                font-size: 1.5em;
+                margin-top: 30px;
+                margin-bottom: 15px;
+            }
+
+            .feature-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+                margin-top: 30px;
+            }
+
+            .feature-card {
+                background: #f8f9fa;
+                border-radius: 8px;
+                padding: 30px;
+                border-left: 4px solid #667eea;
+                transition:
+                    transform 0.3s ease,
+                    box-shadow 0.3s ease;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            }
+
+            .feature-card h3 {
+                margin-top: 0;
+                color: #667eea;
+            }
+
+            .feature-card ul {
+                margin-left: 20px;
+                margin-top: 10px;
+            }
+
+            .feature-card li {
+                margin-bottom: 8px;
+            }
+
+            code {
+                background: #f4f4f4;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-family: "Courier New", monospace;
+                color: #e83e8c;
+            }
+
+            pre {
+                background: #2d2d2d;
+                color: #f8f8f2;
+                padding: 20px;
+                border-radius: 8px;
+                overflow-x: auto;
+                margin: 15px 0;
+                font-family: "Courier New", monospace;
+            }
+
+            pre code {
+                background: none;
+                color: inherit;
+                padding: 0;
+            }
+
+            .btn-group {
+                display: flex;
+                gap: 20px;
+                margin-top: 30px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                display: inline-block;
+                padding: 15px 30px;
+                background: #667eea;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: background 0.3s ease;
+            }
+
+            .btn:hover {
+                background: #5568d3;
+            }
+
+            .btn-secondary {
+                background: #764ba2;
+            }
+
+            .btn-secondary:hover {
+                background: #653a8b;
+            }
+
+            .region-badges {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                margin-top: 15px;
+            }
+
+            .badge {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-weight: 600;
+                font-size: 0.9em;
+            }
+
+            .badge-pnw {
+                background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            }
+            .badge-ca {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            .badge-gg {
+                background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            }
+
+            .state-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .state-tag {
+                background: #e9ecef;
+                padding: 5px 12px;
+                border-radius: 4px;
+                font-size: 0.85em;
+                font-weight: 600;
+                color: #495057;
+            }
+
+            .installation {
+                background: #f8f9fa;
+                padding: 30px;
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+
+            .comparison-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 15px;
+                text-align: left;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .comparison-table th {
+                background: #667eea;
+                color: white;
+                font-weight: 600;
+            }
+
+            .comparison-table tr:hover {
+                background: #f8f9fa;
+            }
+
+            footer {
+                background: #2d2d2d;
+                color: white;
+                text-align: center;
+                padding: 30px;
+            }
+
+            footer a {
+                color: #667eea;
+                text-decoration: none;
+            }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+            .emoji {
+                font-size: 1.2em;
+            }
+
+            @media (max-width: 768px) {
+                header h1 {
+                    font-size: 2em;
+                }
+
+                header p {
+                    font-size: 1em;
+                }
+
+                .content {
+                    padding: 20px;
+                }
+
+                .btn-group {
+                    flex-direction: column;
+                }
+
+                .btn {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>📊 Report Parser</h1>
+                <p>
+                    Transform business reports into clean, segmented marketing
+                    lists
+                </p>
+            </header>
+
+            <div class="content">
+                <section class="section">
+                    <h2>Overview</h2>
+                    <p>
+                        Report Parser is a powerful Python tool that processes
+                        spreadsheet exports from business systems and transforms
+                        them into clean, validated, and segmented contact lists
+                        ready for marketing campaigns.
+                    </p>
+
+                    <div class="btn-group">
+                        <a
+                            href="https://github.com/yourusername/utils"
+                            class="btn"
+                            >View on GitHub</a
+                        >
+                        <a href="#installation" class="btn btn-secondary"
+                            >Get Started</a
+                        >
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Key Features</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3><span class="emoji">🧹</span> Data Cleaning</h3>
+                            <ul>
+                                <li>Remove database UUIDs/IDs</li>
+                                <li>Merge phone numbers</li>
+                                <li>Parse addresses into components</li>
+                                <li>Validate location data</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>
+                                <span class="emoji">🗺️</span> Regional
+                                Segmentation
+                            </h3>
+                            <ul>
+                                <li>Split contacts by geography</li>
+                                <li>Three mailing list regions</li>
+                                <li>Automatic state filtering</li>
+                                <li>Separate exports per region</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>
+                                <span class="emoji">⚡</span> Dual Interface
+                            </h3>
+                            <ul>
+                                <li>Command-line interface (CLI)</li>
+                                <li>Interactive web app (Streamlit)</li>
+                                <li>File upload or folder processing</li>
+                                <li>Real-time preview</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Mailing List Regions</h2>
+                    <p>
+                        Contacts are automatically segmented into three
+                        geographic regions:
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3>
+                                <span class="badge badge-pnw">PNW</span> Pacific
+                                Northwest
+                            </h3>
+                            <div class="state-list">
+                                <span class="state-tag">WA</span>
+                                <span class="state-tag">OR</span>
+                                <span class="state-tag">WY</span>
+                                <span class="state-tag">ID</span>
+                                <span class="state-tag">MT</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>
+                                <span class="badge badge-ca">CA</span>
+                                California
+                            </h3>
+                            <div class="state-list">
+                                <span class="state-tag">CA</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>
+                                <span class="badge badge-gg">GG</span> Golden
+                                Gate
+                            </h3>
+                            <div class="state-list">
+                                <span class="state-tag">NM</span>
+                                <span class="state-tag">NV</span>
+                                <span class="state-tag">UT</span>
+                                <span class="state-tag">CO</span>
+                                <span class="state-tag">AZ</span>
+                                <span class="state-tag">LA</span>
+                                <span class="state-tag">TX</span>
+                                <span class="state-tag">AR</span>
+                                <span class="state-tag">OK</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="installation">
+                    <h2>Installation</h2>
+
+                    <div class="installation">
+                        <h3>Using uv (recommended)</h3>
+                        <pre><code>uv sync</code></pre>
+
+                        <h3>Using pip</h3>
+                        <pre><code>pip install -e .</code></pre>
+
+                        <h3>Configuration</h3>
+                        <p>
+                            Create a <code>.env</code> file in the project root:
+                        </p>
+                        <pre><code>BASE_DIRECTORY=C:\Path\To\Your\Downloads</code></pre>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Usage</h2>
+
+                    <h3>
+                        <span class="emoji">💻</span> Command Line Interface
+                    </h3>
+                    <pre><code># Process contacts (single file)
+uv run python -m utils contacts
+
+# Process contacts with regional segmentation
+uv run python -m utils contacts --segment
+
+# Process visits
+uv run python -m utils visits</code></pre>
+
+                    <h3><span class="emoji">🌐</span> Web Interface</h3>
+                    <pre><code># Launch Streamlit app
+uv run streamlit run app.py</code></pre>
+
+                    <p>The web app provides:</p>
+                    <ul>
+                        <li>
+                            Interactive file upload (no need for Downloads
+                            folder)
+                        </li>
+                        <li>Toggle for regional segmentation</li>
+                        <li>Preview of processed data</li>
+                        <li>Individual download buttons for each region</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2>Contact Processing Pipeline</h2>
+
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                                <th>Action</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Clean IDs</td>
+                                <td>Remove all UUID/ID columns</td>
+                                <td>Cleaner dataset</td>
+                            </tr>
+                            <tr>
+                                <td>2. Merge Phones</td>
+                                <td>Combine Phone & Mobile fields</td>
+                                <td>Single phone column</td>
+                            </tr>
+                            <tr>
+                                <td>3. Parse Address</td>
+                                <td>
+                                    Extract City, State, Zip from Business
+                                    Address
+                                </td>
+                                <td>3 separate location columns</td>
+                            </tr>
+                            <tr>
+                                <td>4. Validate Data</td>
+                                <td>
+                                    Check City (no numbers), State (2 letters),
+                                    Zip (5 digits)
+                                </td>
+                                <td>Clear invalid entries</td>
+                            </tr>
+                            <tr>
+                                <td>5. Filter States</td>
+                                <td>Keep only 15 allowed states</td>
+                                <td>Targeted geography</td>
+                            </tr>
+                            <tr>
+                                <td>6. Segment (optional)</td>
+                                <td>Split into PNW, CA, GG regions</td>
+                                <td>3 separate mailing lists</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="section">
+                    <h2>Output</h2>
+
+                    <h3>Without Segmentation</h3>
+                    <p>
+                        Single file:
+                        <code>Contact_Processed_[timestamp].xlsx</code>
+                    </p>
+
+                    <h3>With Segmentation</h3>
+                    <p>Three files:</p>
+                    <ul>
+                        <li><code>Contact_PNW_[timestamp].xlsx</code></li>
+                        <li><code>Contact_CA_[timestamp].xlsx</code></li>
+                        <li><code>Contact_GG_[timestamp].xlsx</code></li>
+                    </ul>
+
+                    <h3>Columns in Output</h3>
+                    <div class="state-list">
+                        <span class="state-tag">Name</span>
+                        <span class="state-tag">Account Name</span>
+                        <span class="state-tag">Email</span>
+                        <span class="state-tag">Phone</span>
+                        <span class="state-tag">City</span>
+                        <span class="state-tag">State</span>
+                        <span class="state-tag">Zip</span>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Project Structure</h2>
+                    <pre><code>utils/
+├── app.py                    # Streamlit web interface
+├── utils/
+│   ├── __init__.py          # Package exports
+│   ├── __main__.py          # CLI entry point
+│   └── processors.py        # Shared processing logic
+├── docs/
+│   └── index.html           # This documentation
+├── .env                      # Configuration (not in repo)
+├── .gitignore
+├── pyproject.toml
+└── README.md</code></pre>
+                </section>
+
+                <section class="section">
+                    <h2>Data Validation Rules</h2>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3>City Validation</h3>
+                            <ul>
+                                <li>Must be more than 2 characters</li>
+                                <li>Cannot contain numbers</li>
+                                <li>Invalid entries are cleared</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>State Validation</h3>
+                            <ul>
+                                <li>Must be exactly 2 characters</li>
+                                <li>Must be alphabetic only</li>
+                                <li>Must be in allowed list</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3>Zip Code Validation</h3>
+                            <ul>
+                                <li>Must start with 5 digits</li>
+                                <li>Extended ZIP+4 format allowed</li>
+                                <li>Invalid entries are cleared</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <p>Built with ❤️ for efficient contact list management</p>
+                <p>
+                    <a href="https://github.com/yourusername/utils"
+                        >View Source on GitHub</a
+                    >
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
